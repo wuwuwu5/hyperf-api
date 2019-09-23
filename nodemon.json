@@ -1,0 +1,23 @@
+{
+  "restartable": "rs",
+  "ignore": [
+    ".git",
+    ".svn",
+    "node_modules/**/node_modules"
+  ],
+  "verbose": true,
+  "execMap": {
+  },
+  "watch": [
+    "./config/*",
+    "./app/*"
+  ],
+  "events": {
+    "restart": "/usr/bin/env php ./app/reload.php"
+  },
+  "env": {
+    "NODE_ENV": "development"
+  },
+  "ext": "php"
+}
+
