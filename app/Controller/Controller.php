@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 
+use App\Exception\HttpException;
 use Hyperf\HttpServer\Contract\ResponseInterface;
 
 abstract class Controller
@@ -20,13 +21,13 @@ abstract class Controller
     /**
      * 返回错误
      *
-     * @param $message
-     * @param $statusCode
-     * @throws \HttpException
+     * @param string $message
+     * @param int $statusCode
+     * @return HttpException
      */
-    public function error($message, $statusCode)
+    public function error(string $message, int $statusCode): HttpException
     {
-        throw new \HttpException($statusCode, $message);
+        throw new HttpException($message, $statusCode);
     }
 
 
@@ -40,6 +41,6 @@ abstract class Controller
      */
     public function response(?array $data, int $code = 200, string $message = null)
     {
-        return  response()->json(compact('data', 'code', 'message'));
+        return response()->json(compact('data', 'code', 'message'));
     }
 }
