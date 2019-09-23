@@ -28,13 +28,17 @@ class Student extends Model implements JWTSubject
      *
      * @var array
      */
-    protected $fillable = ['nickname', 'real_name', 'avatar', 'gender', 'openid', 'unionid'];
+    protected $fillable = ['nickname', 'real_name', 'avatar', 'gender', 'openid', 'unionid', 'last_login_time'];
     /**
      * The attributes that should be cast to native types.
      *
      * @var array
      */
     protected $casts = [];
+
+    protected $dates = [
+       'last_login_time'
+    ];
 
     /**
      * 查询主键

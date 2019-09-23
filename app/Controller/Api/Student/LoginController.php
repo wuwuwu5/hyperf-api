@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller\Api\Student;
 
 use App\Controller\Auth\JWT;
+use App\Event\LastLoginTimeEvent;
 use App\Models\Student;
 use EasyWeChat\Factory;
 use Hyperf\Di\Annotation\AnnotationCollector;
@@ -16,6 +17,7 @@ use App\Annotation\Login;
 use Hyperf\Utils\Context;
 use App\Controller\Controller as BaseController;
 use Hyperf\HttpServer\Annotation\Controller;
+use Psr\EventDispatcher\EventDispatcherInterface;
 
 /**
  * @Controller(prefix="/api/student")
@@ -28,6 +30,12 @@ class LoginController extends BaseController
      * @var JWT
      */
     protected $jwt;
+
+    /**
+     * @Inject
+     * @var EventDispatcherInterface
+     */
+    private $eventDispatcher;
 
 
     /**
@@ -49,6 +57,9 @@ class LoginController extends BaseController
                 'gender' => $request->input('userInfo.gender'),
             ]);
         }
+
+        // 更新最后登录时间
+        $this->eventDispatcher->dispatch(new LastLoginTimeEvent($user));
 
         $token = $this->jwt->fromUser($user);
 
