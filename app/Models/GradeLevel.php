@@ -27,7 +27,7 @@ class GradeLevel extends Model
      *
      * @var array
      */
-    protected $fillable = [];
+    protected $fillable = ['name', 'grade_id'];
     /**
      * The attributes that should be cast to native types.
      *

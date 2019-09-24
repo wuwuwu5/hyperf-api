@@ -37,4 +37,68 @@ class GradeLevelsController extends BaseController
 
         return $this->response(compact('gradeLevels'));
     }
+
+    /**
+     * @param int $grade
+     * @PostMapping(path="grades/{grade:\d+}/levels")
+     * @param RequestInterface $request
+     * @return \App\Exception\HttpException|ResponseInterface
+     */
+    public function store(int $grade, RequestInterface $request)
+    {
+        if (!$request->has('name')) {
+            return $this->error('参数错误', 422);
+        }
+
+        $gradeLevel = Context::get('grade')->gradeLevels()->where($request->inputs(['name']))->first();
+
+        if (!empty($gradeLevel)) {
+            return $this->error('名称重复', 429);
+        }
+
+        Context::get('grade')->gradeLevels()->create($request->inputs(['name']));
+
+        return $this->response([], 201);
+    }
+
+
+    /**
+     * @param int $grade
+     * @param int $level
+     * @GetMapping(path="grades/{grade:\d+}/levels/{level:\d+}")
+     * @return ResponseInterface'
+     */
+    public function show(int $grade, int $level)
+    {
+        $gradeLevel = Context::get('grade')->gradeLevels()->findOrFail($level);
+
+        return $this->response(compact('gradeLevel'));
+    }
+
+
+    /**
+     * @param int $grade
+     * @param int $level
+     * @param RequestInterface $request
+     * @PutMapping(path="grades/{grade:\d+}/levels/{level:\d+}")
+     * @return \App\Exception\HttpException|ResponseInterface
+     */
+    public function update(int $grade, int $level, RequestInterface $request)
+    {
+        $grade = Context::get('grade');
+
+        $gradeLevel = $grade->gradeLevels()->findOrFail($level);
+
+
+        $mark = $grade->gradeLevels()->where('id', '<>', $gradeLevel->id)->where($request->inputs(['name']))->first();
+
+        if (!empty($mark)) {
+            return $this->error('名称重复', 429);
+        }
+
+        $gradeLevel->name = $request->input('name');
+        $gradeLevel->save();
+
+        return $this->response([], 204);
+    }
 }
