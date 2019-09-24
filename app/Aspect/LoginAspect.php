@@ -45,7 +45,7 @@ class LoginAspect extends AbstractAspect
      * @var array
      */
     public $classes = [
-        'App\Controller\Student\LoginController::login',
+        'App\Controller\Api\Student\LoginController::login',
     ];
 
     /**
