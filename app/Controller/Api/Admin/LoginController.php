@@ -34,6 +34,10 @@ class LoginController extends BaseController
      */
     public function login(RequestInterface $request, ResponseInterface $response)
     {
+        if (!$request->has(['username', 'password'])) {
+            return $this->error('参数错误', 422);
+        }
+
         $adminUser = AdminUser::searchUser($request->input('username'))->first();
 
         if (empty($adminUser)) {

@@ -1,5 +1,8 @@
 <?php
 
+use Hyperf\Utils\Context;
+use Psr\Http\Message\ServerRequestInterface;
+
 function reload()
 {
     echo "\033[32m reload..... \033[0m" . PHP_EOL;
@@ -53,3 +56,13 @@ if (!function_exists('response')) {
         return container()->get(\Hyperf\HttpServer\Contract\ResponseInterface::class);
     }
 }
+
+if (!function_exists('wantJson')) {
+    function wantJson()
+    {
+        $request = Context::get(ServerRequestInterface::class);
+
+        return $request->hasHeader('Content-Type') == 'application/json';
+    }
+}
+
